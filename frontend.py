@@ -2,7 +2,7 @@ import streamlit as st
 import mysql.connector
 
 # --- ALL BACKEND FUNCTIONS ---
-@st.cache_resource
+@st.cache_resource(ttl=3600)
 def connect_db():
     return mysql.connector.connect(
         host=st.secrets["mysql"]["host"],
