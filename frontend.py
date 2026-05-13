@@ -2,7 +2,7 @@ import streamlit as st
 import mysql.connector
 
 # --- ALL BACKEND FUNCTIONS ---
-
+@st.cache_resource
 def connect_db():
     return mysql.connector.connect(
         host=st.secrets["mysql"]["host"],
@@ -11,7 +11,7 @@ def connect_db():
         database=st.secrets["mysql"]["database"],
         port = int(st.secrets["mysql"]["port"])
     )
-
+@st.cache_data
 def get_all_streams():
     try:
         conn = connect_db()
