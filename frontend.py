@@ -8,14 +8,15 @@ def connect_db():
         host=st.secrets["mysql"]["host"],
         user=st.secrets["mysql"]["user"],
         password=st.secrets["mysql"]["password"],
-        database=st.secrets["mysql"]["database"]
+        database=st.secrets["mysql"]["database"],
+        port = int(st.secrets["mysql"]["port"])
     )
 
 def get_all_streams():
     try:
         conn = connect_db()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Streams")
+        cursor.execute("SELECT * FROM streams")
         data = cursor.fetchall()
         conn.close()
         return data
