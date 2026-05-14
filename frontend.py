@@ -2,73 +2,90 @@ import streamlit as st
 import mysql.connector
 
 # --- ALL BACKEND FUNCTIONS ---
-@st.cache_resource
+# --- ALL BACKEND FUNCTIONS (OPTIMIZED) ---
+
+@st.cache_resource(ttl=600)
 def connect_db():
-    return mysql.connector.connect(
-        host=st.secrets["mysql"]["host"],
-        user=st.secrets["mysql"]["user"],
-        password=st.secrets["mysql"]["password"],
-        database=st.secrets["mysql"]["database"],
-        port = int(st.secrets["mysql"]["port"])
-    )
+    try:
+        return mysql.connector.connect(
+            host=st.secrets["mysql"]["host"],
+            user=st.secrets["mysql"]["user"],
+            password=st.secrets["mysql"]["password"],
+            database=st.secrets["mysql"]["database"],
+            port=int(st.secrets["mysql"]["port"]),
+            autocommit=True
+        )
+    except Exception as e:
+        st.error(f"Database connection error: {e}")
+        return None
+
+def get_active_conn():
+    conn = connect_db()
+    # Agar connection band ho gaya ho, toh cache clear karke naya banaye
+    if conn is None or not conn.is_connected():
+        st.cache_resource.clear()
+        return connect_db()
+    return conn
+
 @st.cache_data
 def get_all_streams():
     try:
-        conn = connect_db()
+        conn = get_active_conn()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM streams")
         data = cursor.fetchall()
-        conn.close()
+        cursor.close()
         return data
     except Exception as e:
         st.error(f"Streams fetching error: {e}")
         return []
+
 @st.cache_data
 def get_jobs_by_stream(s_id):
     try:
-        conn = connect_db()
+        conn = get_active_conn()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM job_roles WHERE stream_id = %s", (s_id,))
         data = cursor.fetchall()
-        conn.close()
+        cursor.close()
         return data
     except Exception as e:
         st.error(f"Jobs fetching error: {e}")
         return []
+
 @st.cache_data
 def get_resources_by_roles(job_id):
     try:
-        conn = connect_db()
+        conn = get_active_conn()
         cursor = conn.cursor()
         cursor.execute("SELECT job_id, name, title, link, difficulty, access_type, description, res_id FROM resources WHERE job_id = %s", (job_id,))
         results = cursor.fetchall()
-        conn.close()
+        cursor.close()
         return results
     except Exception as e:
         st.error(f"Resources fetching error: {e}")
         return []
+
 @st.cache_data
-# --- NEW FUNCTION FOR ROADMAP ---
 def get_job_roadmap(job_id):
     try:
-        conn = connect_db()
+        conn = get_active_conn()
         cursor = conn.cursor()
         cursor.execute("SELECT step_order, step_name, duration, description FROM job_roadmaps WHERE job_id = %s ORDER BY step_order ASC", (job_id,))
         roadmap = cursor.fetchall()
-        conn.close()
+        cursor.close()
         return roadmap
     except Exception as e:
-        # Silently fail if table doesn't exist yet or other errors
         return []
 
 def log_user_activity(selection_name):
     try:
-        conn = connect_db()
+        conn = get_active_conn()
         cursor = conn.cursor()
         query = "INSERT INTO analytics (search_query) VALUES (%s)"
         cursor.execute(query, (selection_name,))
-        conn.commit()
-        conn.close()
+        # Caching nahi hai isliye yahan commit zaroori hai (autocommit=True handle kar lega fir bhi)
+        cursor.close()
     except Exception as e:
         print(f"Logging error: {e}")
 
