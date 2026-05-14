@@ -90,7 +90,7 @@ def log_user_activity(selection_name):
         print(f"Logging error: {e}")
 
 # --- PAGE CONFIG & UI DESIGN ---
-st.set_page_config(page_title="Career Navigator", page_icon="🚀")
+st.set_page_config(page_title="skillscript", page_icon="🚀")
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -99,7 +99,7 @@ with st.sidebar:
     st.markdown("<p style='color: #00dbde; font-weight: bold; font-style: italic; font-size: 16px;'> \"Where passion meets profession: Map your future with us.\" </p>", unsafe_allow_html=True)
     st.divider()
 
-    st.markdown("### 🌐 About Career Navigator")
+    st.markdown("### 🌐 About skillscript")
     st.info("""
         An **interactive ecosystem** designed to simplify professional choices. We provide clear roadmaps for every student's success.
     """)
@@ -128,7 +128,7 @@ with st.sidebar:
     st.link_button("🌐 Connect on LinkedIn", "https://www.linkedin.com/in/naitik-tripathi-97b5b13a7/")
     
     st.write("") # Spacer
-    st.caption("© 2026 Career Path Navigator | v2.0")
+    st.caption("© 2026 skillscript | v2.0")
 
 # Custom CSS - GITHUB THEME & ANIMATIONS
 st.markdown("""
@@ -184,7 +184,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown("<h1>🚀 Career Path Navigator</h1>", unsafe_allow_html=True)
+st.markdown("<h1>🚀 skillscript</h1>", unsafe_allow_html=True)
 
 # --- SMART SEARCH CONFIG ---
 aliases = {
