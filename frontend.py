@@ -2,7 +2,7 @@ import streamlit as st
 import mysql.connector
 
 # --- ALL BACKEND FUNCTIONS ---
-
+@st.cache_resource
 def connect_db():
     return mysql.connector.connect(
         host=st.secrets["mysql"]["host"],
@@ -11,7 +11,7 @@ def connect_db():
         database=st.secrets["mysql"]["database"],
         port = int(st.secrets["mysql"]["port"])
     )
-
+@st.cache_data
 def get_all_streams():
     try:
         conn = connect_db()
@@ -23,7 +23,7 @@ def get_all_streams():
     except Exception as e:
         st.error(f"Streams fetching error: {e}")
         return []
-
+@st.cache_data
 def get_jobs_by_stream(s_id):
     try:
         conn = connect_db()
@@ -35,7 +35,7 @@ def get_jobs_by_stream(s_id):
     except Exception as e:
         st.error(f"Jobs fetching error: {e}")
         return []
-
+@st.cache_data
 def get_resources_by_roles(job_id):
     try:
         conn = connect_db()
@@ -47,7 +47,7 @@ def get_resources_by_roles(job_id):
     except Exception as e:
         st.error(f"Resources fetching error: {e}")
         return []
-
+@st.cache_data
 # --- NEW FUNCTION FOR ROADMAP ---
 def get_job_roadmap(job_id):
     try:
