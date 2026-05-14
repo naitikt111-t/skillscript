@@ -1,8 +1,7 @@
 import streamlit as st
 import mysql.connector
-
+import streamlit.components.v1 as components
 # --- ALL BACKEND FUNCTIONS ---
-# --- ALL BACKEND FUNCTIONS (OPTIMIZED) ---
 
 @st.cache_resource(ttl=600)
 def connect_db():
@@ -92,6 +91,21 @@ def log_user_activity(selection_name):
 # --- PAGE CONFIG & UI DESIGN ---
 st.set_page_config(page_title="skillscript", page_icon="🚀")
 
+#--- GOOGLE ANALYTICS INTEGRATION (YAHAN ADD KARO) ---
+def add_analytics():
+    ms_id = "G-4PN5EQ2JVB"
+    ga_code = f"""
+    <script async src="https://www.googletagmanager.com/gtag/js?id={ms_id}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', '{ms_id}');
+    </script>
+    """
+    components.html(ga_code, height=0)
+
+add_analytics()
 # --- SIDEBAR ---
 with st.sidebar:
 
