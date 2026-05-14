@@ -232,6 +232,9 @@ def display_career_details(job_id, job_name):
 # --- APP LOGIC: SEARCH & STREAM HANDLING ---
 
 # Search Input
+# --- APP LOGIC: SEARCH & STREAM HANDLING (FIXED) ---
+
+# Search Input
 search_query = st.text_input("🔍 Direct Career Search:", placeholder="e.g. CA, Data Analyst, Web Developer...")
 
 is_searching = False
@@ -244,7 +247,8 @@ if search_query.strip():
     search_term = aliases.get(input_term, input_term)
     
     try:
-        conn = connect_db()
+        # Naya active connection logic
+        conn = get_active_conn()
         cursor = conn.cursor()
         
         query = """
@@ -257,7 +261,7 @@ if search_query.strip():
         
         cursor.execute(query, param)
         result = cursor.fetchone()
-        conn.close()
+        cursor.close() # Sirf cursor close karo, connection nahi
 
         if result:
             st.write(f"Showing best match for: **{search_query.upper()}**")
