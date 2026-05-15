@@ -1,2 +1,2 @@
-streamlit 
+streamlit>=1.45.0
 mysql-connector-python
