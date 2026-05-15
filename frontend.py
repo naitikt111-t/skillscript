@@ -103,7 +103,7 @@ def add_analytics():
       gtag('config', '{ms_id}');
     </script>
     """
-    components.html(ga_code, height=0)
+    components.html(ga_code, height=1)
 
 add_analytics()
 # --- SIDEBAR ---
