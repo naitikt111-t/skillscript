@@ -94,7 +94,10 @@ st.set_page_config(page_title="skillscript", page_icon="🚀")
 #--- GOOGLE ANALYTICS INTEGRATION (YAHAN ADD KARO) ---
 def add_analytics():
     ms_id = "G-4PN5EQ2JVB"
+    verification_tag = '<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />'
+    
     ga_code = f"""
+    {verification_tag}
     <script async src="https://www.googletagmanager.com/gtag/js?id={ms_id}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
