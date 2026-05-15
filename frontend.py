@@ -1,5 +1,25 @@
 import streamlit as st
 import mysql.connector
+
+# --- 2. NEW GOOGLE ANALYTICS & VERIFICATION (Updated Method) ---
+def add_analytics():
+    # Google Analytics code + Search Console Meta Tag
+    ga_code = """
+    <meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4PN5EQ2JVB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4PN5EQ2JVB');
+    </script>
+    """
+    # Naya st.html command (Iframe ki tension khatam)
+    st.html(ga_code)
+
+# Function call
+add_analytics()
 # --- ALL BACKEND FUNCTIONS ---
 
 @st.cache_resource(ttl=600)
@@ -90,25 +110,6 @@ def log_user_activity(selection_name):
 # --- PAGE CONFIG & UI DESIGN ---
 st.set_page_config(page_title="skillscript", page_icon="🚀")
 
-#--- GOOGLE ANALYTICS INTEGRATION (YAHAN ADD KARO) ---
-def add_analytics():
-    # Google se mila hua exact code
-    ga_code = """
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4PN5EQ2JVB"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-4PN5EQ2JVB');
-    </script>
-    """
-    # Isse call karna mat bhulna
-    import streamlit.components.v1 as components
-    components.html(ga_code, height=1)
-
-# Function call
-add_analytics()
 # --- SIDEBAR ---
 with st.sidebar:
 
