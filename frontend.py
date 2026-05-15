@@ -94,19 +94,27 @@ st.set_page_config(page_title="skillscript", page_icon="🚀")
 #--- GOOGLE ANALYTICS INTEGRATION (YAHAN ADD KARO) ---
 def add_analytics():
     ms_id = "G-4PN5EQ2JVB"
-    verification_tag = '<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />'
+    # Verification tag yahan rahega, lekin isse verify hone ke chances 50-50 hain iframe ki wajah se
+    v_tag = '<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />'
     
     ga_code = f"""
-    {verification_tag}
+    {v_tag}
     <script async src="https://www.googletagmanager.com/gtag/js?id={ms_id}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){{dataLayer.push(arguments);}}
       gtag('js', new Date());
-      gtag('config', '{ms_id}');
+      
+      // MODERN CONFIG: Ye cookies aur cross-site tracking handle karega
+      gtag('config', '{ms_id}', {{
+        'cookie_flags': 'SameSite=None;Secure',
+        'page_path': location.pathname,
+        'send_page_view': true
+      }});
     </script>
     """
-    components.html(ga_code, height=1)
+    
+    components.html(ga_code, height=1, width=1)
 
 add_analytics()
 # --- SIDEBAR ---
