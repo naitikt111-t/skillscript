@@ -1,47 +1,14 @@
 import streamlit as st
 import mysql.connector
+from streamlit_google_analytics_tag import st_google_analytics_tag
 
-# --- 2. NEW GOOGLE ANALYTICS & VERIFICATION (Updated Method) ---
-import os
-import streamlit as st
-import mysql.connector
 
-# --- 1. PRO GA4 INJECTION (Bypasses Iframe) ---
-def inject_ga():
-    GA_ID = "G-4PN5EQ2JVB"
-    VERIFY_TAG = '<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />'
-    
-    GA_JS = f"""
-    {VERIFY_TAG}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){{dataLayer.push(arguments);}}
-        gtag('js', new Date());
-        gtag('config', '{GA_ID}');
-    </script>
-    """
-    
-    try:
-        # Streamlit ki main index.html file dhundhna
-        st_dir = os.path.dirname(st.__file__) # Yahan __file__ aayega
-        index_path = os.path.join(st_dir, "static", "index.html")
+st_google_analytics_tag("G-4PN5EQ2JVB")
 
-        with open(index_path, "r") as f:
-            html = f.read()
+verification_tag = '<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />'
+st.html(verification_tag)
 
-        if GA_ID not in html:
-            # Code ko <head> ke theek baad ghusana
-            updated_html = html.replace("<head>", "<head>" + GA_JS)
-            with open(index_path, "w") as f:
-                f.write(updated_html)
-    except Exception as e:
-        # Agar koi error aaye toh backend mein print hoga
-        print(f"Injection Error: {e}")
-
-# IMPORTANT: Sabse pehle ise run karo
-inject_ga()
-
+# --- 4. ALL BACKEND FUNCTIONS ---
 
 @st.cache_resource(ttl=600)
 def connect_db():
