@@ -1,6 +1,5 @@
 import streamlit as st
 import mysql.connector
-import streamlit.components.v1 as components
 # --- ALL BACKEND FUNCTIONS ---
 
 @st.cache_resource(ttl=600)
@@ -93,29 +92,22 @@ st.set_page_config(page_title="skillscript", page_icon="🚀")
 
 #--- GOOGLE ANALYTICS INTEGRATION (YAHAN ADD KARO) ---
 def add_analytics():
-    ms_id = "G-4PN5EQ2JVB"
-    # Verification tag yahan rahega, lekin isse verify hone ke chances 50-50 hain iframe ki wajah se
-    v_tag = '<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />'
-    
-    ga_code = f"""
-    {v_tag}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={ms_id}"></script>
+    # Google se mila hua exact code
+    ga_code = """
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4PN5EQ2JVB"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){{dataLayer.push(arguments);}}
+      function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      
-      // MODERN CONFIG: Ye cookies aur cross-site tracking handle karega
-      gtag('config', '{ms_id}', {{
-        'cookie_flags': 'SameSite=None;Secure',
-        'page_path': location.pathname,
-        'send_page_view': true
-      }});
+
+      gtag('config', 'G-4PN5EQ2JVB');
     </script>
     """
-    
-    components.html(ga_code, height=1, width=1)
+    # Isse call karna mat bhulna
+    import streamlit.components.v1 as components
+    components.html(ga_code, height=1)
 
+# Function call
 add_analytics()
 # --- SIDEBAR ---
 with st.sidebar:
