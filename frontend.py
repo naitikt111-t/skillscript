@@ -1,12 +1,5 @@
 import streamlit as st
 import mysql.connector
-from streamlit_google_analytics_tag import st_google_analytics_tag
-
-
-st_google_analytics_tag("G-4PN5EQ2JVB")
-
-verification_tag = '<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />'
-st.html(verification_tag)
 
 # --- 4. ALL BACKEND FUNCTIONS ---
 
