@@ -1,44 +1,9 @@
-import os
+
 import streamlit as st
 import mysql.connector
-import requests
-import uuid
 
-# --- 2. BACKEND TRACKING FUNCTION (With API Secret) ---
-def send_analytics_event():
-    measurement_id = "G-4PN5EQ2JVB"
-    # Jo API Secret Value tumhe mili hai, wo yahan dalenge
-    api_secret = "Pt-tPa4RQIyESRhLZ0t4JQ"
-    
-    if 'client_id' not in st.session_state:
-        st.session_state.client_id = str(uuid.uuid4())
 
-    # URL mein ab api_secret bhi add ho gaya hai
-    url = f"https://www.google-analytics.com/mp/collect?measurement_id={measurement_id}&api_secret={api_secret}"
-    
-    payload = {
-        "client_id": st.session_state.client_id,
-        "events": [{
-            "name": "page_view",
-            "params": {
-                "page_title": "SkillScript Home",
-                "page_location": "https://skillscript.streamlit.app"
-            }
-        }]
-    }
-    
-   try:
-        # Google ke server ko data bhej rahe hain
-        response = requests.post(url, json=payload, timeout=5)
-        # Agar tum live logs dekh rahe ho, toh wahan status code print hoga
-        st.write(f"Analytics Status: {response.status_code}") # Ye temporary line hai
-    except Exception as e:
-        st.write(f"Analytics Connection Error: {e}")
-
-# Function call
-send_analytics_event()
-
-# --- 4. ALL BACKEND FUNCTIONS ---
+# --- ALL BACKEND FUNCTIONS ---
 
 @st.cache_resource(ttl=600)
 def connect_db():
