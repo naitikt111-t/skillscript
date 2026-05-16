@@ -4,13 +4,17 @@ import mysql.connector
 import requests
 import uuid
 
+# --- 2. BACKEND TRACKING FUNCTION (With API Secret) ---
 def send_analytics_event():
     measurement_id = "G-4PN5EQ2JVB"
+    # Jo API Secret Value tumhe mili hai, wo yahan dalenge
+    api_secret = "Pt-tPa4RQIyESRhLZ0t4JQ"
     
     if 'client_id' not in st.session_state:
         st.session_state.client_id = str(uuid.uuid4())
 
-    url = f"https://www.google-analytics.com/mp/collect?measurement_id={measurement_id}"
+    # URL mein ab api_secret bhi add ho gaya hai
+    url = f"https://www.google-analytics.com/mp/collect?measurement_id={measurement_id}&api_secret={api_secret}"
     
     payload = {
         "client_id": st.session_state.client_id,
@@ -24,17 +28,13 @@ def send_analytics_event():
     }
     
     try:
+        # Google ke server ko data bhej rahe hain
         requests.post(url, json=payload, timeout=5)
     except:
         pass
 
-# Function ko call karo
+# Function call
 send_analytics_event()
-
-# --- 3. SEARCH CONSOLE VERIFICATION ---
-st.html('<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />')
-
-
 
 # --- 4. ALL BACKEND FUNCTIONS ---
 
