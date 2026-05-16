@@ -27,11 +27,13 @@ def send_analytics_event():
         }]
     }
     
-    try:
+   try:
         # Google ke server ko data bhej rahe hain
-        requests.post(url, json=payload, timeout=5)
-    except:
-        pass
+        response = requests.post(url, json=payload, timeout=5)
+        # Agar tum live logs dekh rahe ho, toh wahan status code print hoga
+        st.write(f"Analytics Status: {response.status_code}") # Ye temporary line hai
+    except Exception as e:
+        st.write(f"Analytics Connection Error: {e}")
 
 # Function call
 send_analytics_event()
