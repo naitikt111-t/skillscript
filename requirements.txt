@@ -1,3 +1,2 @@
 streamlit>=1.45.0
 mysql-connector-python
-streamlit-google-analytics-tag
