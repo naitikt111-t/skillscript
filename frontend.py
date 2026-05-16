@@ -1,5 +1,40 @@
+import os
 import streamlit as st
 import mysql.connector
+import requests
+import uuid
+
+def send_analytics_event():
+    measurement_id = "G-4PN5EQ2JVB"
+    
+    if 'client_id' not in st.session_state:
+        st.session_state.client_id = str(uuid.uuid4())
+
+    url = f"https://www.google-analytics.com/mp/collect?measurement_id={measurement_id}"
+    
+    payload = {
+        "client_id": st.session_state.client_id,
+        "events": [{
+            "name": "page_view",
+            "params": {
+                "page_title": "SkillScript Home",
+                "page_location": "https://skillscript.streamlit.app"
+            }
+        }]
+    }
+    
+    try:
+        requests.post(url, json=payload, timeout=5)
+    except:
+        pass
+
+# Function ko call karo
+send_analytics_event()
+
+# --- 3. SEARCH CONSOLE VERIFICATION ---
+st.html('<meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />')
+
+
 
 # --- 4. ALL BACKEND FUNCTIONS ---
 
