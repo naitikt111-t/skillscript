@@ -5,12 +5,12 @@ gatherUsageStats = false
 html = """
 <head>
     <meta name="google-site-verification" content="zjx6T3uLBr1KqVDW6WRbCIXCKF6Q_nmqtwERyET8yy0" />
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4PN5EQ2JVB"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8364NFEPVP"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-4PN5EQ2JVB');
+        gtag('config', 'G-8364NFEPVP');
     </script>
 </head>
 """
