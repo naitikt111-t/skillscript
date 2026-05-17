@@ -2,9 +2,14 @@ import streamlit as st
 import mysql.connector
 import os  
 # --- GOOGLE SEARCH CONSOLE BYPASS 
-if "google4dfdc1703f9a656a.html" in st.experimental_get_query_params() or "google" in str(st.experimental_get_query_params()):
-    st.write("google-site-verification: google4dfdc1703f9a656a.html")
-    st.stop()  
+try:
+    current_params = st.query_params
+    # Agar Google ka bot file ke naam se ya kisi parameter se hit kare
+    if "google4dfdc1703f9a656a.html" in str(current_params) or "google" in str(current_params):
+        st.write("google-site-verification: google4dfdc1703f9a656a.html")
+        st.stop()
+except Exception as e:
+    pass
 
 # --- ALL BACKEND FUNCTIONS ---
 
