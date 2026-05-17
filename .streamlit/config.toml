@@ -4,7 +4,7 @@ gatherUsageStats = false
 [client]
 html = """
 <head>
-    <meta name="google-site-verification" content="bDW2z3cf_Tl2irHZicspzRBDWTOJC2_JWxgJL3VDFAA" />
+    <meta name="google-site-verification" content="zjx6T3uLBr1KqVDW6WRbCIXCKF6Q_nmqtwERyET8yy0" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4PN5EQ2JVB"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
