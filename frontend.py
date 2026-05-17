@@ -2,14 +2,15 @@ import streamlit as st
 import mysql.connector
 import os  
 # --- GOOGLE SEARCH CONSOLE BYPASS 
-try:
-    current_params = st.query_params
-    # Agar Google ka bot file ke naam se ya kisi parameter se hit kare
-    if "google4dfdc1703f9a656a.html" in str(current_params) or "google" in str(current_params):
-        st.write("google-site-verification: google4dfdc1703f9a656a.html")
-        st.stop()
-except Exception as e:
-    pass
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8364NFEPVP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8364NFEPVP');
+</script>
 
 # --- ALL BACKEND FUNCTIONS ---
 
