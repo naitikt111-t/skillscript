@@ -1,6 +1,10 @@
 import streamlit as st
 import mysql.connector
 import os  
+# --- GOOGLE SEARCH CONSOLE BYPASS 
+if "google4dfdc1703f9a656a.html" in st.experimental_get_query_params() or "google" in str(st.experimental_get_query_params()):
+    st.write("google-site-verification: google4dfdc1703f9a656a.html")
+    st.stop()  
 
 # --- ALL BACKEND FUNCTIONS ---
 
