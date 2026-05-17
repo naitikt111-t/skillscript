@@ -1,24 +1,37 @@
-
 import streamlit as st
 import mysql.connector
-
+import os  
 
 # --- ALL BACKEND FUNCTIONS ---
 
 @st.cache_resource(ttl=600)
 def connect_db():
     try:
+        host = os.environ.get("DB_HOST")
+        port = os.environ.get("DB_PORT")
+        user = os.environ.get("DB_USER")
+        password = os.environ.get("DB_PASSWORD")
+        database = os.environ.get("DB_NAME")
+
+        if not host:
+            host = st.secrets["mysql"]["host"]
+            port = st.secrets["mysql"]["port"]
+            user = st.secrets["mysql"]["user"]
+            password = st.secrets["mysql"]["password"]
+            database = st.secrets["mysql"]["database"]
+            
         return mysql.connector.connect(
-            host=st.secrets["mysql"]["host"],
-            user=st.secrets["mysql"]["user"],
-            password=st.secrets["mysql"]["password"],
-            database=st.secrets["mysql"]["database"],
-            port=int(st.secrets["mysql"]["port"]),
+            host=host,
+            user=user,
+            password=password,
+            database=database,
+            port=int(port),
             autocommit=True
         )
     except Exception as e:
         st.error(f"Database connection error: {e}")
         return None
+
 
 def get_active_conn():
     conn = connect_db()
