@@ -99,7 +99,7 @@ def log_user_activity(selection_name):
         cursor = conn.cursor()
         query = "INSERT INTO analytics (search_query) VALUES (%s)"
         cursor.execute(query, (selection_name,))
-        # Caching nahi hai isliye yahan commit zaroori hai (autocommit=True handle kar lega fir bhi)
+        
         cursor.close()
     except Exception as e:
         print(f"Logging error: {e}")
@@ -212,7 +212,7 @@ aliases = {
 
 # --- UI HELPER FOR ROADMAP + RESOURCES ---
 def display_career_details(job_id, job_name):
-    # Part A: Roadmap Section (GitHub UI Style)
+    
     roadmap = get_job_roadmap(job_id)
     if roadmap:
         st.markdown(f"#### 🧭 {job_name} Career Journey")
@@ -232,7 +232,7 @@ def display_career_details(job_id, job_name):
             """, unsafe_allow_html=True)
         st.divider()
 
-    # Part B: Resources Section
+    
     st.markdown(f"#### 📚 Learning Resources")
     resources = get_resources_by_roles(job_id)
     if resources:
@@ -244,10 +244,9 @@ def display_career_details(job_id, job_name):
     else:
         st.info("Resources added soon!")
 
-# --- APP LOGIC: SEARCH & STREAM HANDLING ---
 
-# Search Input
-# --- APP LOGIC: SEARCH & STREAM HANDLING (FIXED) ---
+
+
 
 # Search Input
 search_query = st.text_input("🔍 Direct Career Search:", placeholder="e.g. CA, Data Analyst, Web Developer...")
@@ -262,7 +261,7 @@ if search_query.strip():
     search_term = aliases.get(input_term, input_term)
     
     try:
-        # Naya active connection logic
+        
         conn = get_active_conn()
         cursor = conn.cursor()
         
@@ -276,7 +275,7 @@ if search_query.strip():
         
         cursor.execute(query, param)
         result = cursor.fetchone()
-        cursor.close() # Sirf cursor close karo, connection nahi
+        cursor.close() 
 
         if result:
             st.write(f"Showing best match for: **{search_query.upper()}**")
@@ -315,4 +314,4 @@ if not is_searching:
                 with st.expander(f"💼 {job[2]}"):
                     display_career_details(job[0], job[2])
     else:
-        st.warning("Database se connect nahi ho paya.")
+        st.warning("Database didn't connected.")
