@@ -118,36 +118,49 @@ with st.sidebar:
     st.divider()
 
     # --- AI CAREER COUNSELOR BOT IN SIDEBAR ---
-    st.markdown("### 🤖 SkillScript AI Counselor")
-    with st.expander("💬 Chat with AI Advisor", expanded=False):
-        if not groq_client:
-            st.warning("Please configure `GROQ_API_KEY` in your secrets to use the AI Chatbot.")
-        else:
-            # Maintain Chat History
-            if "messages" not in st.session_state:
-                st.session_state.messages = [
-                    {"role": "system", "content": "You are SkillScript AI, a helpful career advisor for high school students in India. Provide concise, friendly guidance on degrees, entrance exams, and skills."}
-                ]
+st.markdown("### 🤖 SkillScript AI Counselor")
+with st.expander("💬 Chat with AI Advisor", expanded=False):
+    if not groq_client:
+        st.warning("Please configure `GROQ_API_KEY` in your secrets to use the AI Chatbot.")
+    else:
+        # Maintain Chat History
+        if "messages" not in st.session_state:
+            st.session_state.messages = [
+                {
+                    "role": "system", 
+                    "content": "You are SkillScript AI, a helpful career advisor for high school students in India. Provide concise, friendly guidance on degrees, entrance exams, and skills."
+                }
+            ]
 
-            # Render Chat Messages
-            for msg in st.session_state.messages:
-                if msg["role"] != "system":
-                    st.chat_message(msg["role"]).write(msg["content"])
+        # Render Chat Messages
+        for msg in st.session_state.messages:
+            if msg["role"] != "system":
+                st.chat_message(msg["role"]).write(msg["content"])
 
-            # Chat Input
-            if user_input := st.chat_input("Ask about careers, exams..."):
-                st.chat_message("user").write(user_input)
-                st.session_state.messages.append({"role": "user", "content": user_input})
+        # Chat Input
+        if user_input := st.chat_input("Ask about careers, exams..."):
+            st.chat_message("user").write(user_input)
+            st.session_state.messages.append({"role": "user", "content": user_input})
 
-                with st.chat_message("assistant"):
+            # Clean messages payload to prevent API malformed data error
+            cleaned_messages = [
+                {"role": m["role"], "content": str(m["content"])} 
+                for m in st.session_state.messages
+            ]
+
+            with st.chat_message("assistant"):
+                try:
                     response = groq_client.chat.completions.create(
-                        model="llama3-8b-8192",
-                        messages=st.session_state.messages
+                        model="llama-3.3-70b-versatile",
+                        messages=cleaned_messages,
+                        temperature=0.7,
+                        max_tokens=500
                     )
                     bot_reply = response.choices[0].message.content
                     st.write(bot_reply)
-
-                st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+                    st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+                except Exception as e:
+                    st.error(f"Groq API Error: {e}")
 
     st.divider()
 
