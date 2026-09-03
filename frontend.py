@@ -1,7 +1,17 @@
 import streamlit as st
 import mysql.connector
 import os  
-# --- GOOGLE SEARCH CONSOLE BYPASS 
+from groq import Groq  
+
+# --- PAGE CONFIG & UI DESIGN ---
+st.set_page_config(page_title="skillscript", page_icon="🚀")
+
+# --- GROQ CLIENT INITIALIZATION ---
+# Securely fetching key from secrets (.streamlit/secrets.toml)
+try:
+    groq_client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+except Exception as e:
+    groq_client = None
 
 # --- ALL BACKEND FUNCTIONS ---
 
@@ -33,10 +43,8 @@ def connect_db():
         st.error(f"Database connection error: {e}")
         return None
 
-
 def get_active_conn():
     conn = connect_db()
-    # Agar connection band ho gaya ho, toh cache clear karke naya banaye
     if conn is None or not conn.is_connected():
         st.cache_resource.clear()
         return connect_db()
@@ -99,19 +107,48 @@ def log_user_activity(selection_name):
         cursor = conn.cursor()
         query = "INSERT INTO analytics (search_query) VALUES (%s)"
         cursor.execute(query, (selection_name,))
-        
         cursor.close()
     except Exception as e:
         print(f"Logging error: {e}")
 
-# --- PAGE CONFIG & UI DESIGN ---
-st.set_page_config(page_title="skillscript", page_icon="🚀")
-
 # --- SIDEBAR ---
 with st.sidebar:
-
     st.markdown("## 🧭 Navigator's Hub")
     st.markdown("<p style='color: #00dbde; font-weight: bold; font-style: italic; font-size: 16px;'> \"Where passion meets profession: Map your future with us.\" </p>", unsafe_allow_html=True)
+    st.divider()
+
+    # --- AI CAREER COUNSELOR BOT IN SIDEBAR ---
+    st.markdown("### 🤖 SkillScript AI Counselor")
+    with st.expander("💬 Chat with AI Advisor", expanded=False):
+        if not groq_client:
+            st.warning("Please configure `GROQ_API_KEY` in your secrets to use the AI Chatbot.")
+        else:
+            # Maintain Chat History
+            if "messages" not in st.session_state:
+                st.session_state.messages = [
+                    {"role": "system", "content": "You are SkillScript AI, a helpful career advisor for high school students in India. Provide concise, friendly guidance on degrees, entrance exams, and skills."}
+                ]
+
+            # Render Chat Messages
+            for msg in st.session_state.messages:
+                if msg["role"] != "system":
+                    st.chat_message(msg["role"]).write(msg["content"])
+
+            # Chat Input
+            if user_input := st.chat_input("Ask about careers, exams..."):
+                st.chat_message("user").write(user_input)
+                st.session_state.messages.append({"role": "user", "content": user_input})
+
+                with st.chat_message("assistant"):
+                    response = groq_client.chat.completions.create(
+                        model="llama-3.3-70b-versatile",
+                        messages=st.session_state.messages
+                    )
+                    bot_reply = response.choices[0].message.content
+                    st.write(bot_reply)
+
+                st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+
     st.divider()
 
     st.markdown("### 🌐 About skillscript")
@@ -212,7 +249,6 @@ aliases = {
 
 # --- UI HELPER FOR ROADMAP + RESOURCES ---
 def display_career_details(job_id, job_name):
-    
     roadmap = get_job_roadmap(job_id)
     if roadmap:
         st.markdown(f"#### 🧭 {job_name} Career Journey")
@@ -232,7 +268,6 @@ def display_career_details(job_id, job_name):
             """, unsafe_allow_html=True)
         st.divider()
 
-    
     st.markdown(f"#### 📚 Learning Resources")
     resources = get_resources_by_roles(job_id)
     if resources:
@@ -244,10 +279,6 @@ def display_career_details(job_id, job_name):
     else:
         st.info("Resources added soon!")
 
-
-
-
-
 # Search Input
 search_query = st.text_input("🔍 Direct Career Search:", placeholder="e.g. CA, Data Analyst, Web Developer...")
 
@@ -256,12 +287,9 @@ is_searching = False
 if search_query.strip():
     is_searching = True
     input_term = search_query.strip().lower()
-    
-    # Convert short forms (CA -> Chartered Accountant)
     search_term = aliases.get(input_term, input_term)
     
     try:
-        
         conn = get_active_conn()
         cursor = conn.cursor()
         
